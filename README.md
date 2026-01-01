@@ -1,6 +1,6 @@
 # V-Store | E-Commerce Website
 
-[🔗 **Live Demo**](https://vatsalvarma.github.io/v-ecom.github.io/)  
+[🔗 **Live Demo**](https://vatsalvarma.github.io/v-ecom.github.io/) visit: https://vatsalvarma.github.io/v-ecom.github.io/  
 <img width="1916" height="963" alt="Screenshot 2026-01-01 171345" src="https://github.com/user-attachments/assets/0c753870-2885-48a6-8fee-a655f866274e" />
 
 Welcome to **V-Store**, a modern and interactive front-end e-commerce website built using **HTML, CSS, and JavaScript**. Explore products, add them to your cart, place orders, and contact the developer via the About section.
