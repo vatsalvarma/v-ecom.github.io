@@ -212,6 +212,7 @@ footer {
     color: white;
     text-align: center;
     padding: 15px;
+    display: none; /* hide by default */
     margin-top: auto;
 }
 </style>
@@ -291,10 +292,12 @@ footer {
 <div id="ordersPage" class="page">
     <h2>Your Orders</h2>
     <div id="orderList"></div>
-    <footer>
-        <p>© 2025 Vatsal Store | All Rights Reserved</p>
-    </footer>
 </div>
+
+<!-- FOOTER -->
+<footer id="footer">
+    <p>© 2025 Vatsal Store | All Rights Reserved</p>
+</footer>
 
 <!-- ABOUT & CONTACT -->
 <div id="aboutModal">
@@ -330,6 +333,9 @@ function showPage(page) {
     document.getElementById('cartPage').classList.remove('active');
     document.getElementById('ordersPage').classList.remove('active');
 
+    const footer = document.getElementById('footer');
+    footer.style.display = 'none'; // hide by default
+
     if(page==='home') document.getElementById('homePage').classList.add('active');
     if(page==='cart') {
         document.getElementById('cartPage').classList.add('active');
@@ -338,6 +344,7 @@ function showPage(page) {
     if(page==='orders') {
         document.getElementById('ordersPage').classList.add('active');
         renderOrders();
+        footer.style.display = 'block'; // show footer only on orders
     }
 }
 
@@ -359,7 +366,7 @@ function renderCart() {
     cart.forEach((item, index) => {
         let div = document.createElement('div');
         div.className = 'cart-item';
-        div.style.animationDelay = (index * 0.1) + 's'; // staggered animation
+        div.style.animationDelay = (index * 0.1) + 's';
         div.innerHTML = `<span>${item.product} - ₹${item.price}</span> <button onclick="removeFromCart(${index})">Remove</button>`;
         cartItems.appendChild(div);
     });
@@ -393,7 +400,7 @@ function renderOrders() {
     orders.forEach((item, index) => {
         let div = document.createElement('div');
         div.className = 'order-item';
-        div.style.animationDelay = (index * 0.1) + 's'; // staggered animation
+        div.style.animationDelay = (index * 0.1) + 's';
         div.innerHTML = `<span>${item.product} - ₹${item.price}</span>`;
         orderList.appendChild(div);
     });
