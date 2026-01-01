@@ -31,9 +31,27 @@ nav h2 {
     color: #00ffcc;
 }
 
+nav .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+nav .nav-links button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+nav .nav-links button:hover {
+    color: #00ffcc;
+}
+
 nav input {
     padding: 8px;
-    width: 250px;
+    width: 200px;
     border-radius: 5px;
     border: none;
 }
@@ -44,6 +62,7 @@ nav input {
     color: white;
     text-align: center;
     padding: 60px 20px;
+    transition: 0.5s;
 }
 
 .hero h1 {
@@ -98,7 +117,7 @@ nav input {
     font-weight: bold;
 }
 
-button {
+button.product-btn {
     margin-top: 10px;
     padding: 10px;
     width: 100%;
@@ -110,9 +129,62 @@ button {
     transition: 0.3s;
 }
 
-button:hover {
+button.product-btn:hover {
     background: #00ffcc;
     color: black;
+}
+
+/* CART & ORDERS */
+#cartPage, #ordersPage {
+    padding: 40px;
+    display: none;
+}
+
+#cartPage h2, #ordersPage h2 {
+    margin-bottom: 20px;
+}
+
+.cart-item, .order-item {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ABOUT & CONTACT MODAL */
+#aboutModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#aboutModal .modal-content {
+    background: #111;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+}
+
+#aboutModal button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    cursor: pointer;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    border-radius: 5px;
 }
 
 /* FOOTER */
@@ -131,17 +203,23 @@ footer {
 <!-- NAVBAR -->
 <nav>
     <h2>V - STORE</h2>
+    <div class="nav-links">
+        <button onclick="showHome()">Home</button>
+        <button onclick="showCart()">Cart (<span id="cartCount">0</span>)</button>
+        <button onclick="showOrders()">Orders</button>
+        <button onclick="showAbout()">About & Contact</button>
+    </div>
     <input type="text" id="search" placeholder="Search products..." onkeyup="searchProduct()">
 </nav>
 
 <!-- HERO -->
-<div class="hero">
+<div class="hero" id="homePage">
     <h1>WELCOME TO V-STORE</h1>
     <p>Best Deals on Phones, Laptops & Games</p>
 </div>
 
 <!-- PRODUCTS -->
-<div class="container">
+<div class="container" id="productSection">
     <div class="products" id="productList">
 
         <div class="card">
@@ -149,7 +227,7 @@ footer {
             <div class="card-content">
                 <h3>Smartphone</h3>
                 <p class="price">₹25,000</p>
-                <button onclick="addToCart('Smartphone')">Add to Cart</button>
+                <button class="product-btn" onclick="addToCart('Smartphone', 25000)">Add to Cart</button>
             </div>
         </div>
 
@@ -158,7 +236,7 @@ footer {
             <div class="card-content">
                 <h3>Laptop</h3>
                 <p class="price">₹65,000</p>
-                <button onclick="addToCart('Laptop')">Add to Cart</button>
+                <button class="product-btn" onclick="addToCart('Laptop', 65000)">Add to Cart</button>
             </div>
         </div>
 
@@ -167,7 +245,7 @@ footer {
             <div class="card-content">
                 <h3>Gaming Console</h3>
                 <p class="price">₹45,000</p>
-                <button onclick="addToCart('Gaming Console')">Add to Cart</button>
+                <button class="product-btn" onclick="addToCart('Gaming Console', 45000)">Add to Cart</button>
             </div>
         </div>
 
@@ -176,10 +254,35 @@ footer {
             <div class="card-content">
                 <h3>Headphones</h3>
                 <p class="price">₹3,000</p>
-                <button onclick="addToCart('Headphones')">Add to Cart</button>
+                <button class="product-btn" onclick="addToCart('Headphones', 3000)">Add to Cart</button>
             </div>
         </div>
 
+    </div>
+</div>
+
+<!-- CART PAGE -->
+<div id="cartPage">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <button onclick="placeOrder()" style="padding:10px 20px;margin-top:15px;background:#00ffcc;color:black;border:none;border-radius:5px;cursor:pointer;">Place Order</button>
+</div>
+
+<!-- ORDERS PAGE -->
+<div id="ordersPage">
+    <h2>Your Orders</h2>
+    <div id="orderList"></div>
+</div>
+
+<!-- ABOUT & CONTACT -->
+<div id="aboutModal">
+    <div class="modal-content">
+        <h2>About Me</h2>
+        <p>Hi, I'm Vatsal Varma, a passionate web developer and tech enthusiast.</p>
+        <h3>Contact</h3>
+        <p>Email: gamesvatsal99@gmail.com</p>
+        <p>Phone: +91-XXXXXXXXXX</p>
+        <button onclick="closeAbout()">Close</button>
     </div>
 </div>
 
@@ -188,10 +291,101 @@ footer {
 </footer>
 
 <script>
-function addToCart(product) {
+// CART & LOCAL STORAGE
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+function updateCartCount() {
+    document.getElementById('cartCount').innerText = cart.length;
+}
+
+function addToCart(product, price) {
+    cart.push({product, price});
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
     alert(product + " added to cart!");
 }
 
+function showHome() {
+    document.getElementById('homePage').style.display = 'block';
+    document.getElementById('productSection').style.display = 'block';
+    document.getElementById('cartPage').style.display = 'none';
+    document.getElementById('ordersPage').style.display = 'none';
+}
+
+function showCart() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('productSection').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'block';
+    document.getElementById('ordersPage').style.display = 'none';
+    renderCart();
+}
+
+function showOrders() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('productSection').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'none';
+    document.getElementById('ordersPage').style.display = 'block';
+    renderOrders();
+}
+
+function showAbout() {
+    document.getElementById('aboutModal').style.display = 'flex';
+}
+
+function closeAbout() {
+    document.getElementById('aboutModal').style.display = 'none';
+}
+
+function renderCart() {
+    let cartItems = document.getElementById('cartItems');
+    cartItems.innerHTML = '';
+    if(cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty</p>";
+        return;
+    }
+    cart.forEach((item, index) => {
+        let div = document.createElement('div');
+        div.className = 'cart-item';
+        div.innerHTML = `<span>${item.product} - ₹${item.price}</span> <button onclick="removeFromCart(${index})">Remove</button>`;
+        cartItems.appendChild(div);
+    });
+}
+
+function removeFromCart(index) {
+    cart.splice(index,1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    updateCartCount();
+}
+
+function placeOrder() {
+    if(cart.length === 0) { alert("Cart is empty!"); return; }
+    orders.push(...cart);
+    localStorage.setItem('orders', JSON.stringify(orders));
+    cart = [];
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert("Order placed successfully!");
+    showOrders();
+}
+
+function renderOrders() {
+    let orderList = document.getElementById('orderList');
+    orderList.innerHTML = '';
+    if(orders.length === 0) {
+        orderList.innerHTML = "<p>No orders placed yet.</p>";
+        return;
+    }
+    orders.forEach(item => {
+        let div = document.createElement('div');
+        div.className = 'order-item';
+        div.innerHTML = `<span>${item.product} - ₹${item.price}</span>`;
+        orderList.appendChild(div);
+    });
+}
+
+// SEARCH
 function searchProduct() {
     let input = document.getElementById("search").value.toLowerCase();
     let cards = document.querySelectorAll(".card");
@@ -205,6 +399,10 @@ function searchProduct() {
         }
     });
 }
+
+// INITIALIZE
+updateCartCount();
+showHome();
 </script>
 
 </body>
