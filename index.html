@@ -15,7 +15,6 @@
 
 body {
     background: #f5f5f5;
-    overflow-x: hidden;
 }
 
 /* NAVBAR */
@@ -63,7 +62,7 @@ nav input {
     color: white;
     text-align: center;
     padding: 60px 20px;
-    transition: all 0.6s ease;
+    transition: 0.5s;
 }
 
 .hero h1 {
@@ -136,19 +135,13 @@ button.product-btn:hover {
 }
 
 /* CART & ORDERS */
-.page {
+#cartPage, #ordersPage {
     padding: 40px;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 100%;
-    opacity: 0;
-    transition: all 0.6s ease;
+    display: none;
 }
 
-.page.active {
-    left: 0;
-    opacity: 1;
+#cartPage h2, #ordersPage h2 {
+    margin-bottom: 20px;
 }
 
 .cart-item, .order-item {
@@ -211,77 +204,74 @@ footer {
 <nav>
     <h2>V - STORE</h2>
     <div class="nav-links">
-        <button onclick="showPage('home')">Home</button>
-        <button onclick="showPage('cart')">Cart (<span id="cartCount">0</span>)</button>
-        <button onclick="showPage('orders')">Orders</button>
+        <button onclick="showHome()">Home</button>
+        <button onclick="showCart()">Cart (<span id="cartCount">0</span>)</button>
+        <button onclick="showOrders()">Orders</button>
         <button onclick="showAbout()">About & Contact</button>
     </div>
     <input type="text" id="search" placeholder="Search products..." onkeyup="searchProduct()">
 </nav>
 
-<!-- HOME PAGE -->
-<div id="homePage" class="page active">
-    <div class="hero">
-        <h1>WELCOME TO V-STORE</h1>
-        <p>Best Deals on Phones, Laptops & Games</p>
-    </div>
-    <div class="container" id="productSection">
-        <div class="products" id="productList">
+<!-- HERO -->
+<div class="hero" id="homePage">
+    <h1>WELCOME TO V-STORE</h1>
+    <p>Best Deals on Phones, Laptops & Games</p>
+</div>
 
-            <div class="card">
-                <img src="mi.png" alt="">
-                <div class="card-content">
-                    <h3>Smartphone</h3>
-                    <p class="price">₹25,000</p>
-                    <button class="product-btn" onclick="addToCart('Smartphone', 25000)">Add to Cart</button>
-                </div>
+<!-- PRODUCTS -->
+<div class="container" id="productSection">
+    <div class="products" id="productList">
+
+        <div class="card">
+            <img src="mi.png" alt="">
+            <div class="card-content">
+                <h3>Smartphone</h3>
+                <p class="price">₹25,000</p>
+                <button class="product-btn" onclick="addToCart('Smartphone', 25000)">Add to Cart</button>
             </div>
-
-            <div class="card">
-                <img src="laptop.png" alt="">
-                <div class="card-content">
-                    <h3>Laptop</h3>
-                    <p class="price">₹65,000</p>
-                    <button class="product-btn" onclick="addToCart('Laptop', 65000)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="cont.png" alt="">
-                <div class="card-content">
-                    <h3>Gaming Console</h3>
-                    <p class="price">₹45,000</p>
-                    <button class="product-btn" onclick="addToCart('Gaming Console', 45000)">Add to Cart</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <img src="head.png" alt="">
-                <div class="card-content">
-                    <h3>Headphones</h3>
-                    <p class="price">₹3,000</p>
-                    <button class="product-btn" onclick="addToCart('Headphones', 3000)">Add to Cart</button>
-                </div>
-            </div>
-
         </div>
+
+        <div class="card">
+            <img src="laptop.png" alt="">
+            <div class="card-content">
+                <h3>Laptop</h3>
+                <p class="price">₹65,000</p>
+                <button class="product-btn" onclick="addToCart('Laptop', 65000)">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="cont.png" alt="">
+            <div class="card-content">
+                <h3>Gaming Console</h3>
+                <p class="price">₹45,000</p>
+                <button class="product-btn" onclick="addToCart('Gaming Console', 45000)">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="head.png" alt="">
+            <div class="card-content">
+                <h3>Headphones</h3>
+                <p class="price">₹3,000</p>
+                <button class="product-btn" onclick="addToCart('Headphones', 3000)">Add to Cart</button>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <!-- CART PAGE -->
-<div id="cartPage" class="page">
+<div id="cartPage">
     <h2>Your Cart</h2>
     <div id="cartItems"></div>
     <button onclick="placeOrder()" style="padding:10px 20px;margin-top:15px;background:#00ffcc;color:black;border:none;border-radius:5px;cursor:pointer;">Place Order</button>
 </div>
 
 <!-- ORDERS PAGE -->
-<div id="ordersPage" class="page">
+<div id="ordersPage">
     <h2>Your Orders</h2>
     <div id="orderList"></div>
-    <footer>
-        <p>© 2025 Vatsal Store | All Rights Reserved</p>
-    </footer>
 </div>
 
 <!-- ABOUT & CONTACT -->
@@ -290,12 +280,15 @@ footer {
         <h2>About Me</h2>
         <p>Hi, I'm Vatsal Varma, a passionate web developer and tech enthusiast.</p>
         <h3>Contact</h3>
-        <p>Email: <a href="mailto:gamesvatsal99@gmail.com" style="color:#00ffcc;">gamesvatsal99@gmail.com</a></p>
-        <p>GitHub: <a href="https://github.com/vatsalvarma" target="_blank" style="color:#00ffcc;">github.com/vatsalvarma</a></p>
-        <p>LinkedIn: <a href="https://linkedin.com/in/vatsalvarma" target="_blank" style="color:#00ffcc;">linkedin.com/in/vatsalvarma</a></p>
+        <p>Email: gamesvatsal99@gmail.com</p>
+        <p>Phone: +91-XXXXXXXXXX</p>
         <button onclick="closeAbout()">Close</button>
     </div>
 </div>
+
+<footer>
+    <p>© 2025 Vatsal Store | All Rights Reserved</p>
+</footer>
 
 <script>
 // CART & LOCAL STORAGE
@@ -313,18 +306,27 @@ function addToCart(product, price) {
     alert(product + " added to cart!");
 }
 
-function showPage(page) {
-    const pages = {home:'homePage', cart:'cartPage', orders:'ordersPage'};
-    for (let key in pages) {
-        let el = document.getElementById(pages[key]);
-        if(key === page) {
-            el.classList.add('active');
-            if(key==='cart') renderCart();
-            if(key==='orders') renderOrders();
-        } else {
-            el.classList.remove('active');
-        }
-    }
+function showHome() {
+    document.getElementById('homePage').style.display = 'block';
+    document.getElementById('productSection').style.display = 'block';
+    document.getElementById('cartPage').style.display = 'none';
+    document.getElementById('ordersPage').style.display = 'none';
+}
+
+function showCart() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('productSection').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'block';
+    document.getElementById('ordersPage').style.display = 'none';
+    renderCart();
+}
+
+function showOrders() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('productSection').style.display = 'none';
+    document.getElementById('cartPage').style.display = 'none';
+    document.getElementById('ordersPage').style.display = 'block';
+    renderOrders();
 }
 
 function showAbout() {
@@ -365,7 +367,7 @@ function placeOrder() {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     alert("Order placed successfully!");
-    showPage('orders');
+    showOrders();
 }
 
 function renderOrders() {
@@ -400,7 +402,7 @@ function searchProduct() {
 
 // INITIALIZE
 updateCartCount();
-showPage('home');
+showHome();
 </script>
 
 </body>
